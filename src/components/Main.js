@@ -88,6 +88,42 @@ class ImgFigure extends React.Component {
   }
 }
 
+//控制組件
+class ControllerUnit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    //翻转和居中图片
+    if (this.props.arrange.isCenter) {
+      this.props.inverse()
+    } else {
+      this.props.center();
+    }
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  render() {
+    let controllerUnitClassName = 'controller-unit';
+    //如果对应的是居中的图片，显示控制按钮的居中态
+    if (this.props.arrange.isCenter) {
+      controllerUnitClassName += ' is-center ';
+      //如果翻转显示翻转状态
+      if (this.props.arrange.isInverse) {
+        controllerUnitClassName += 'is-inverse'
+      }
+    }
+
+    return (
+      <span className={controllerUnitClassName} onClick={this.handleClick}/>
+    );
+  }
+}
+
+
 class GalleryAPP extends React.Component {
   constructor(props) {
     super(props);
@@ -263,7 +299,7 @@ class GalleryAPP extends React.Component {
     this.Constant.vPosRange.x[0] = halfStageW - imgW;
     this.Constant.vPosRange.x[1] = halfStageW;
 
-    let num = Math.ceil(Math.random() * 20);
+    let num = Math.ceil(Math.random() * 10);
     this.rearrange(num);
   }
 
@@ -288,6 +324,10 @@ class GalleryAPP extends React.Component {
                                  arrange={this.state.imgsArrangeArr[index]}
                                  inverse={this.inverse(index)}
                                  center={this.center(index)}/>);
+      controllerUnits.push(<ControllerUnit key={index}
+                                           arrange={this.state.imgsArrangeArr[index]}
+                                           inverse={this.inverse(index)}
+                                           center={this.center(index)}/>);
     });
 
     return (
